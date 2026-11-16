@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlow | Admin Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fa;
+            color: #263238;
+        }
+
+        header {
+            background: #243b55;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .profile-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .profile-link:hover {
+            text-decoration: underline;
+        }
+
+        .logout button {
+            padding: 9px 16px;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            color: #243b55;
+            cursor: pointer;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            margin-bottom: 8px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #243b55;
+        }
+
+        .card p {
+            color: #667085;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>FocusFlow Admin</h2>
+
+    <div class="header-actions">
+
+        <a class="profile-link" href="{% url 'profile' %}">
+            My Profile
+        </a>
+
+        <form class="logout" method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+
+    </div>
+</header>
+
+<main>
+    <section class="welcome">
+        <h1>Welcome, {{ request.user.first_name|default:request.user.username }}!</h1>
+        <p>Administrator Dashboard — FocusFlow System Overview</p>
+    </section>
+
+    <section class="cards">
+        <div class="card">
+            <h3>User Management</h3>
+            <p>Oversee FocusFlow user accounts and their account information.</p>
+        </div>
+
+        <div class="card">
+            <h3>System Overview</h3>
+            <p>View the general status and organization of the FocusFlow system.</p>
+        </div>
+
+        <div class="card">
+            <h3>Administrator Account</h3>
+            <p>Manage your administrator profile and account details.</p>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

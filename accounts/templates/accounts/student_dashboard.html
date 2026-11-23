@@ -97,6 +97,22 @@
             color: #777;
             line-height: 1.5;
             font-size: 14px;
+
+            .tracker-link {
+    display: inline-block;
+    margin-top: 15px;
+    background: #3978d4;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.tracker-link:hover {
+    background: #285fae;
+}
         }
     </style>
 </head>
@@ -134,10 +150,14 @@
                 <p>Set and manage your daily and weekly screen-time goals.</p>
             </div>
 
-            <div class="card">
-                <h3>Manual Activity Tracker</h3>
-                <p>Record your productive and distracting activities.</p>
-            </div>
+          <div class="card">
+    <h3>Manual Activity Tracker</h3>
+    <p>Record your productive and distracting activities.</p>
+
+    <a href="{% url 'activity_list' %}" class="tracker-link">
+        Open Activity Tracker
+    </a>
+</div>
 
             <div class="card">
                 <h3>Focus Timer</h3>

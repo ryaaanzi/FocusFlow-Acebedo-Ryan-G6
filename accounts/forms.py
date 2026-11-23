@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Profile
+from .models import Profile, ActivityRecord
 
 
 class RegistrationForm(UserCreationForm):
@@ -86,3 +86,50 @@ class ProfileDetailsForm(forms.ModelForm):
         fields = [
             'contact_number',
         ]
+
+
+        
+class ActivityRecordForm(forms.ModelForm):
+
+    class Meta:
+        model = ActivityRecord
+        fields = [
+            'activity_name',
+            'activity_type',
+            'duration_minutes',
+            'recorded_at',
+            'notes',
+        ]
+
+        widgets = {
+            'activity_name': forms.TextInput(attrs={
+                'placeholder': 'Enter activity name'
+            }),
+            'recorded_at': forms.DateTimeInput(attrs={
+                'type': 'datetime-local'
+            }),
+            'notes': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Optional notes'
+            }),
+        }
+
+    def clean_activity_name(self):
+        activity_name = self.cleaned_data.get('activity_name')
+
+        if not activity_name or not activity_name.strip():
+            raise forms.ValidationError(
+                "Activity name cannot be empty."
+            )
+
+        return activity_name.strip()
+
+    def clean_duration_minutes(self):
+        duration = self.cleaned_data.get('duration_minutes')
+
+        if duration is not None and duration < 1:
+            raise forms.ValidationError(
+                "Duration must be at least 1 minute."
+            )
+
+        return duration

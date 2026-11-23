@@ -1,4 +1,3 @@
-
 from django.urls import path
 from . import views
 
@@ -12,4 +11,9 @@ urlpatterns = [
     path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
 
     path('profile/', views.profile_view, name='profile'),
+
+    path('activities/', views.activity_list, name='activity_list'),
+    path('activities/add/', views.activity_create, name='activity_create'),
+    path('activities/<int:pk>/edit/', views.activity_update, name='activity_update'),
+    path('activities/<int:pk>/delete/', views.activity_delete, name='activity_delete'),
 ]

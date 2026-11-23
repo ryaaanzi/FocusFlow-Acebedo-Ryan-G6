@@ -1,6 +1,6 @@
 
 from django.http import HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -10,8 +10,9 @@ from .forms import (
     RegistrationForm,
     ProfileUpdateForm,
     ProfileDetailsForm,
+    ActivityRecordForm,
 )
-from .models import Profile
+from .models import Profile, ActivityRecord
 
 
 def register_view(request):
@@ -181,5 +182,156 @@ def profile_view(request):
         {
             'user_form': user_form,
             'profile_form': profile_form,
+        }
+    )
+
+
+@login_required
+def activity_list(request):
+
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
+
+    if profile.role != 'STUDENT':
+        return HttpResponseForbidden(
+            "You are not authorized to access the Activity Tracker."
+        )
+
+    activities = ActivityRecord.objects.filter(
+        user=request.user
+    )
+
+    return render(
+        request,
+        'accounts/activity_list.html',
+        {
+            'activities': activities,
+        }
+    )
+
+
+@login_required
+def activity_create(request):
+
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
+
+    if profile.role != 'STUDENT':
+        return HttpResponseForbidden(
+            "You are not authorized to create activity records."
+        )
+
+    if request.method == 'POST':
+        form = ActivityRecordForm(request.POST)
+
+        if form.is_valid():
+            activity = form.save(commit=False)
+            activity.user = request.user
+            activity.save()
+
+            messages.success(
+                request,
+                'Activity record added successfully!'
+            )
+
+            return redirect('activity_list')
+
+    else:
+        form = ActivityRecordForm()
+
+    return render(
+        request,
+        'accounts/activity_form.html',
+        {
+            'form': form,
+            'page_title': 'Add Activity',
+        }
+    )
+
+
+@login_required
+def activity_update(request, pk):
+
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
+
+    if profile.role != 'STUDENT':
+        return HttpResponseForbidden(
+            "You are not authorized to update activity records."
+        )
+
+    activity = get_object_or_404(
+        ActivityRecord,
+        pk=pk,
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        form = ActivityRecordForm(
+            request.POST,
+            instance=activity
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(
+                request,
+                'Activity record updated successfully!'
+            )
+
+            return redirect('activity_list')
+
+    else:
+        form = ActivityRecordForm(
+            instance=activity
+        )
+
+    return render(
+        request,
+        'accounts/activity_form.html',
+        {
+            'form': form,
+            'page_title': 'Edit Activity',
+        }
+    )
+
+
+@login_required
+def activity_delete(request, pk):
+
+    profile, created = Profile.objects.get_or_create(
+        user=request.user
+    )
+
+    if profile.role != 'STUDENT':
+        return HttpResponseForbidden(
+            "You are not authorized to delete activity records."
+        )
+
+    activity = get_object_or_404(
+        ActivityRecord,
+        pk=pk,
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        activity.delete()
+
+        messages.success(
+            request,
+            'Activity record deleted successfully!'
+        )
+
+        return redirect('activity_list')
+
+    return render(
+        request,
+        'accounts/activity_confirm_delete.html',
+        {
+            'activity': activity,
         }
     )

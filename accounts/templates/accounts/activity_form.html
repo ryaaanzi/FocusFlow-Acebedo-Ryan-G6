@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} | FocusFlow</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f5f9;
+            color: #26364a;
+        }
+
+        header {
+            background: #26364a;
+            color: white;
+            padding: 20px 7%;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .form-card h2 {
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .field-errors {
+            color: #d14b4b;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .error-summary {
+            color: #d14b4b;
+            margin-bottom: 18px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .save-button {
+            background: #3978d4;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cancel-link {
+            color: #555;
+            text-decoration: none;
+            padding: 12px 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>FocusFlow</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="form-card">
+
+            <h2>{{ page_title }}</h2>
+            <p class="description">
+                Enter the details of your activity below.
+            </p>
+
+            {% if form.non_field_errors %}
+                <div class="error-summary">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="form-group">
+
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small>{{ field.help_text }}</small>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <div class="field-errors">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button class="save-button" type="submit">
+                        Save Activity
+                    </button>
+
+                    <a class="cancel-link" href="{% url 'activity_list' %}">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

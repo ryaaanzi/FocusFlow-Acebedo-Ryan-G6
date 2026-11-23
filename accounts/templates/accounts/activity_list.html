@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Tracker | FocusFlow</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f5f9;
+            color: #26364a;
+        }
+
+        header {
+            background: #26364a;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-heading p {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .add-button {
+            background: #3978d4;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            background: #e2f5e8;
+            color: #236b3a;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .activity-card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .activity-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .activity-details {
+            color: #777;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .productive {
+            color: #23834a;
+            font-weight: bold;
+        }
+
+        .distracting {
+            color: #d14b4b;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .edit-link {
+            color: #3978d4;
+        }
+
+        .delete-link {
+            color: #d14b4b;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 35px;
+            text-align: center;
+            border-radius: 10px;
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+            .page-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>FocusFlow</h1>
+        <a class="back-link" href="{% url 'student_dashboard' %}">
+            Back to Dashboard
+        </a>
+    </header>
+
+    <main class="container">
+
+        <section class="page-heading">
+            <div>
+                <h2>Manual Activity Tracker</h2>
+                <p>Manage your productive and distracting activities.</p>
+            </div>
+
+            <a class="add-button" href="{% url 'activity_create' %}">
+                + Add Activity
+            </a>
+        </section>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if activities %}
+            {% for activity in activities %}
+                <div class="activity-card">
+
+                    <h3>{{ activity.activity_name }}</h3>
+
+                    <div class="activity-details">
+                        <p>
+                            Activity Type:
+                            {% if activity.activity_type == 'PRODUCTIVE' %}
+                                <span class="productive">Productive</span>
+                            {% else %}
+                                <span class="distracting">Distracting</span>
+                            {% endif %}
+                        </p>
+
+                        <p>Duration: {{ activity.duration_minutes }} minutes</p>
+
+                        <p>
+                            Recorded:
+                            {{ activity.recorded_at|date:"M d, Y - h:i A" }}
+                        </p>
+
+                        {% if activity.notes %}
+                            <p>Notes: {{ activity.notes }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="actions">
+                        <a class="edit-link"
+                           href="{% url 'activity_update' activity.pk %}">
+                            Edit
+                        </a>
+
+                        <a class="delete-link"
+                           href="{% url 'activity_delete' activity.pk %}">
+                            Delete
+                        </a>
+                    </div>
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No activities recorded yet.</h3>
+                <p>Start by adding your first activity.</p>
+            </div>
+        {% endif %}
+
+    </main>
+
+</body>
+</html>

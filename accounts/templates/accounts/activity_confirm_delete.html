@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Activity | FocusFlow</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f5f9;
+            color: #26364a;
+        }
+
+        header {
+            background: #26364a;
+            color: white;
+            padding: 20px 7%;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .confirm-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+        }
+
+        .confirm-card h2 {
+            margin-bottom: 15px;
+        }
+
+        .confirm-card p {
+            color: #777;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .delete-button {
+            background: #d14b4b;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cancel-link {
+            background: #e5e9ef;
+            color: #26364a;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>FocusFlow</h1>
+    </header>
+
+    <main class="container">
+
+        <section class="confirm-card">
+
+            <h2>Delete Activity?</h2>
+
+            <p>
+                Are you sure you want to delete
+                <strong>{{ activity.activity_name }}</strong>?
+                This action cannot be undone.
+            </p>
+
+            <div class="actions">
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <button class="delete-button" type="submit">
+                        Yes, Delete
+                    </button>
+                </form>
+
+                <a class="cancel-link" href="{% url 'activity_list' %}">
+                    Cancel
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
